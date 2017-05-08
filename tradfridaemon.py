@@ -9,13 +9,17 @@ import requests
 import pprint
 
 # pont tradfri
-IP="192.168.0.73"
-KEY="lcxoHSTjJOxgZ6I4"
-DEBUG=False
+IP     ="xxxxx"
+KEY    ="xxx"
+IKEA_ID=[65538,65544,65540]
 # Jeedom
-#URL_JEEDOM = "http://192.168.0.16/core/api/jeeApi.php"
+IP_JEEDOM  = "xxx"
 URL_JEEDOM = "http://127.0.0.1/core/api/jeeApi.php"
-API_KEY    = "6tvyjdpb88jh1bdqli20"
+API_KEY    = "xxx"
+JEEDOM_ID  =["617","681","680"]
+
+#
+DEBUG=False
 
 #
 def JeedomAPI(ID="0",methode="ping"):
@@ -210,16 +214,15 @@ def internet(host="127.0.0.1", port=53, timeout=5):
        return False 
 #
 print("\tdaemon TRADFRI pour interface JEEDOM\n")
-# test connection externe (LMS)
-while not internet(host="192.168.0.11", port=9090):
+# test connection externe 
+while not internet(host=IP_JEEDOM, port=80):
       time.sleep(10)
 #
 # lecture des equipements lumieres JEEDOM
 #
-eqJEEDOM=EquiptJEEDOM(["617","681","680"])
-
+eqJEEDOM=EquiptJEEDOM(JEEDOM_ID)
 # et equipement IKEA
-eqIkea=EquiptIKEA([65538,65544,65540])
+eqIkea=EquiptIKEA(IKEA_ID)
 N = len(eqIkea.LightIkea)
 # init
 for k in range(N):
