@@ -70,7 +70,9 @@ name  ampoule salle tv 2
 state  True
 dimmmer  200
 ```
-idem pour la commande off et pour la commande dim (gestion intensité) en passant en parametre la valeur de l(itensité de 0a 255
+idem pour la commande off.
+
+Pour la commande dim (gestion intensité) en passant en parametre la valeur de l'itensité de 0 à 255
 ```
 set_tradfri.py dim 100 65543 65544 
 
@@ -91,5 +93,5 @@ On peut le configurer en tant que service systemctl permettant sa gestion automa
 
 Pour utiliser ce daemon, il faut le configurer en spécifiant l'adresse IP du pont et sa clé (écrite sous le boitier), ainsi que les widgets JEEDOM et les lumières tradfri associées.
 
-
+![widget JEEDOM](https://github.com/mbuffat/Tradfri-JEEDOM/blob/master/jeedom.png)
 
