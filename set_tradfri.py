@@ -9,9 +9,10 @@ import sys
 import pytradfri
 import time
 
-# adresse pont
-IP="192.168.0.73"
-KEY="lcxoHSTjJOxgZ6I4"
+# adresse du pont
+IP="xxxxx"
+KEY="xxxxxx"
+
 # configuration variables. 
 api = pytradfri.coap_cli.api_factory(IP, KEY)
 gateway = pytradfri.gateway.Gateway(api)

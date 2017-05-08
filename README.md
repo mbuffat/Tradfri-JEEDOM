@@ -28,17 +28,20 @@ puis installer ensuite la librairie pytradfri avec pip3 (version python3)
 ```
 pip3 install pytradfri
 ```
-Le principe est d'avoir un un daemon (pytradfridaemon.py) qui met à jour l'état des ampoules dans les widgets sous Jeedom et un programme qui contrôle les ampoules (les allume ou les éteinds) depuis JEEDOM.
+Le principe est d'avoir un daemon ("pytradfridaemon.py") qui met à jour l'état des ampoules dans les widgets sous Jeedom et un programme ("set_trafri.py") qui contrôle les ampoules (les allume ou les éteinds) depuis JEEDOM.
 
 ## "set_tradfri.py"  action sur le pont
-pour manipuler les ampoules, j'utilise le script set_trafri.py 
+Pour manipuler les ampoules, j'utilise le script set_trafri.py.
 
-sans argument, il donne la liste des equipements tradfri. Il permet d'avoir le numero (id) des ampoules installées.
-'''
+Avant de l'utiliser il faut le configurer en spécifiant l'adresse IP du pont et sa clé (écrite sous le boitier).
+
+Sans argument, il donne la liste des equipements tradfri. 
+Il permet d'avoir le numero (id) des ampoules installées.
+```
 set_tradfri.py
-'''
+```
 liste les equipements du pont
-'''
+```
 syntaxe: set_tradfri [on/off/dim] [val] ampoules_id
 
         Pont TRADFRI ip: 192.168.0.73
@@ -48,14 +51,14 @@ syntaxe: set_tradfri [on/off/dim] [val] ampoules_id
 
     liste des ampoules 6
 [<65538 - Ampoule Escalier 2 (TRADFRI bulb E27 opal 1000lm)>, <65544 - ampoule salle tv 2 (TRADFRI bulb GU10 WS 400lm)>, <65543 - Ampoule salle tv 1 (TRADFRI bulb GU10 WS 400lm)>, <65542 - Ampoule couloir bas (TRADFRI bulb E27 opal 1000lm)>, <65540 - Ampoule Escalier bas (TRADFRI bulb E27 opal 1000lm)>, <65537 - Ampoule Escalier 1 (TRADFRI bulb E14 WS opal 400lm)>] 
-'''
+```
 
 Pour allumer une liste d'ampoules de numero id1 id2 id2
-'''
+```
 set_trafri.py on id1 id2 ...
-'''
+```
 par exemple:
-'''
+```
 set_tradfri.py on 65543 65544 
 
 Etat ampoule 65543
@@ -66,9 +69,9 @@ Etat ampoule 65544
 name  ampoule salle tv 2
 state  True
 dimmmer  200
-'''
+```
 idem pour la commande off et pour la commande dim (gestion intensité) en passant en parametre la valeur de l(itensité de 0a 255
-'''
+```
 set_tradfri.py dim 100 65543 65544 
 
 Etat ampoule 65543
@@ -79,6 +82,14 @@ Etat ampoule 65544
 name  ampoule salle tv 2
 state  True
 dimmmer  100
-'''
+```
 
-##daemon "tradfridaemon.py"
+## daemon "tradfridaemon.py"
+
+ce daemon tourne en permanence et met à jour les widgets sous JEEDOM (etat des lampes, intensité, joignable).
+On peut le configurer en tant que service systemctl permettant sa gestion automatique.
+
+Pour utiliser ce daemon, il faut le configurer en spécifiant l'adresse IP du pont et sa clé (écrite sous le boitier), ainsi que les widgets JEEDOM et les lumières tradfri associées.
+
+
+
