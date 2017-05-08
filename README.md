@@ -91,7 +91,26 @@ dimmmer  100
 ce daemon tourne en permanence et met à jour les widgets sous JEEDOM (etat des lampes, intensité, joignable).
 On peut le configurer en tant que service systemctl permettant sa gestion automatique.
 
-Pour utiliser ce daemon, il faut le configurer en spécifiant l'adresse IP du pont et sa clé (écrite sous le boitier), ainsi que les widgets JEEDOM et les lumières tradfri associées.
+Pour utiliser ce daemon, il faut le configurer en spécifiant l'adresse IP du pont et sa clé (écrite sous le boitier): variable IP et KEY , puis l'IP de JEEDOM et la clé API JEEDOM: variable IP_JEEDOM et API_KEY, ainsi que les widgets JEEDOM et les lumières tradfri associées: variable JEEDOM_ID et IKEA_ID.
 
+Il faut donc d'abord créer autant de widget lumiere sous JEEDOM que de lampes IKEA. Chaque widget est associé à un virtuel avec les commandes suivantes:
+
+- etat
+- on 
+- off
+- bright
+- setbright
+- reach
+- setreach
+
+en suivant l'exemple suivant:
 ![widget JEEDOM](https://github.com/mbuffat/Tradfri-JEEDOM/blob/master/jeedom.png)
 
+## creation service
+pour installer le daemon en tant que service, on place le fichier tradfridaemon.service dans /etc/systemd/system
+
+et on execute les commandes suivantes:
+```
+systemctl enable tradfridaemon
+systemctl start tradfridaemon
+```
