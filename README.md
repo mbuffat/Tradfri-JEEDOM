@@ -106,8 +106,11 @@ Il faut donc d'abord créer autant de widget lumiere sous JEEDOM que de lampes I
 en suivant l'exemple suivant:
 ![widget JEEDOM](https://github.com/mbuffat/Tradfri-JEEDOM/blob/master/jeedom.png)
 
-## creation service
+Avec les scénarios on associe les commandes on,off,setbright à la commande set_tradfri.py pour executer les commandes de contrôle sous JEEDOM.
+
+## creation du service
 pour installer le daemon en tant que service, on place le fichier tradfridaemon.service dans /etc/systemd/system
+et le daemon tradfridaemon.py dans /usr/loca/sbin/
 
 et on execute les commandes suivantes:
 ```
