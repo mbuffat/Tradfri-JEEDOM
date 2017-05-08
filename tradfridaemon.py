@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
-# daemon tradfy 
+# -*- coding: utf-8 -*
+# daemon tradfy pour interface JEEDOM
+# M. BUFFAT
 import sys
 import time
 import socket
