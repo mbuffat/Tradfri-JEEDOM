@@ -4,7 +4,7 @@
 
 ## Introduction
 Pour pouvoir utiliser le système TRADFRI IKEA sous [JEEDOM](https://www.jeedom.com), le programme de domotique que j'utilise chez moi, j'ai développé les programmes python suivant pour la gestion des lumières avec JEEDOM.
-Dans l'interface JEEDOM j'ai donc des widgets de la forme suivante
+Dans l'interface JEEDOM j'ai donc des widgets de la forme suivante,par exemple pour les lumières de l'escalier et de la salle TV, avec gestion de l'intensité et test de l'accès des lampes avec le pont (permet de savoir si l'interupteur est sur off)
 
 ![interface JEEDOM](https://github.com/mbuffat/Tradfri-JEEDOM/blob/master/tradfri.png)
 
@@ -28,11 +28,12 @@ puis installer ensuite la librairie pytradfri avec pip3 (version python3)
 ```
 pip3 install pytradfri
 ```
+Le principe est d'avoir un un daemon (pytradfridaemon.py) qui met à jour l'état des ampoules dans les widgets sous Jeedom et un programme qui contrôle les ampoules (les allume ou les éteinds) depuis JEEDOM.
 
-## set_tradfri.py: action sur le pont
+## "set_tradfri.py"  action sur le pont
 pour manipuler les ampoules, j'utilise le script set_trafri.py 
 
-sans argument, la commande 
+sans argument, il donne la liste des equipements tradfri. Il permet d'avoir le numero (id) des ampoules installées.
 '''
 set_tradfri.py
 '''
@@ -48,3 +49,36 @@ syntaxe: set_tradfri [on/off/dim] [val] ampoules_id
     liste des ampoules 6
 [<65538 - Ampoule Escalier 2 (TRADFRI bulb E27 opal 1000lm)>, <65544 - ampoule salle tv 2 (TRADFRI bulb GU10 WS 400lm)>, <65543 - Ampoule salle tv 1 (TRADFRI bulb GU10 WS 400lm)>, <65542 - Ampoule couloir bas (TRADFRI bulb E27 opal 1000lm)>, <65540 - Ampoule Escalier bas (TRADFRI bulb E27 opal 1000lm)>, <65537 - Ampoule Escalier 1 (TRADFRI bulb E14 WS opal 400lm)>] 
 '''
+
+Pour allumer une liste d'ampoules de numero id1 id2 id2
+'''
+set_trafri.py on id1 id2 ...
+'''
+par exemple:
+'''
+set_tradfri.py on 65543 65544 
+
+Etat ampoule 65543
+name  Ampoule salle tv 1
+state  True
+dimmmer  200
+Etat ampoule 65544
+name  ampoule salle tv 2
+state  True
+dimmmer  200
+'''
+idem pour la commande off et pour la commande dim (gestion intensité) en passant en parametre la valeur de l(itensité de 0a 255
+'''
+set_tradfri.py dim 100 65543 65544 
+
+Etat ampoule 65543
+name  Ampoule salle tv 1
+state  True
+dimmmer  100
+Etat ampoule 65544
+name  ampoule salle tv 2
+state  True
+dimmmer  100
+'''
+
+##daemon "tradfridaemon.py"
