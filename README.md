@@ -89,6 +89,7 @@ dimmmer  100
 ## daemon "tradfridaemon.py"
 
 ce daemon tourne en permanence et met à jour les widgets sous JEEDOM (etat des lampes, intensité, joignable).
+Ilpermet de remonter sous JEEDOM les actions extérieures qui modifient l'etat des lampes (interrupteur, application smartphone, telecommande,...).
 On peut le configurer en tant que service systemctl permettant sa gestion automatique.
 
 Pour utiliser ce daemon, il faut le configurer en spécifiant l'adresse IP du pont et sa clé (écrite sous le boitier): variable IP et KEY , puis l'IP de JEEDOM et la clé API JEEDOM: variable IP_JEEDOM et API_KEY, ainsi que les widgets JEEDOM et les lumières tradfri associées: variable JEEDOM_ID et IKEA_ID.
