@@ -6,7 +6,7 @@
 Pour pouvoir utiliser le système TRADFRI IKEA sous [JEEDOM](https://www.jeedom.com), le programme de domotique que j'utilise chez moi, j'ai développé les programmes python suivant pour la gestion des lumières avec JEEDOM.
 Dans l'interface JEEDOM j'ai donc des widgets de la forme suivante
 
-![interface JEEDOM](https://raw.githubusercontent.com/mbuffat/Tradfri-JEEDOM/blob/master/tradfri.png)
+![interface JEEDOM](https://github.com/mbuffat/Tradfri-JEEDOM/blob/master/tradfri.png)
 
 ## Installation
 Il faut installer la bibliothèque python3 pytradfri (instructions tirées de [https://github.com/ggravlingen/pytradfri](https://github.com/ggravlingen/pytradfri)).
