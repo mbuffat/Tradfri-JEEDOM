@@ -1,0 +1,12 @@
+[Unit]
+Description= interface lumiere TRADFRI / JEEDOM 
+#After=multi-user.target syslog.target network.target network-online.target
+After = systemd-user-sessions.service network.target sound.target
+
+[Service]
+PIDFile=/var/run/tradfridaemon.pid
+ExecStart=/usr/local/sbin/tradfridaemon.py
+
+[Install]
+WantedBy=multi-user.target
+
