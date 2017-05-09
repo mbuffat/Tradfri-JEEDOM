@@ -5,9 +5,10 @@
 ## Introduction
 Pour pouvoir utiliser le système TRADFRI IKEA sous [JEEDOM](https://www.jeedom.com), le programme de domotique que j'utilise chez moi, j'ai développé une série de programmes python pour la gestion des lumières IKEA avec JEEDOM.
 
-**ATTENTION**: pour une utilisation classique de Jeedom avec des pluggins, il faut attendre le pluggin officiel de gestion TRADFRI en cours de développement par l'équipe JEEDOM.
+**ATTENTION**: 
+* pour une utilisation classique de Jeedom avec des pluggins, il faut attendre le pluggin officiel de gestion TRADFRI en cours de développement par l'équipe JEEDOM.
 
-* L'utilisation n'est donc pas du type plugins JEEDOM, et il s'adresse donc a des utilisateurs avertis de JEEDOM qui connaisent un peu la programmation sous Linux et qui veulent dès à présent intégrer le système TRADFRI à leur système JEEDOM, et l'adapter à leur configuration.*
+* L'utilisation n'est donc pas du type plugins JEEDOM, et il s'adresse donc a des utilisateurs avertis de JEEDOM qui connaisent un peu la programmation sous Linux et qui veulent dès à présent intégrer le système TRADFRI à leur système JEEDOM, et l'adapter à leur configuration.
 
 Sur mon interface JEEDOM j'ai donc des widgets lumières,par exemple pour les lumières de l'escalier et de la salle TV, avec une gestion de l'intensité et le test de l'accès des lampes avec le pont : cela permet en particulier si la lampe est allimentée et si l'interrupteur n'est pas sur off (j'utilise le système TRADFRI sur une installation existante avec des interrupteurs physiques)
 
