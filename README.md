@@ -8,7 +8,7 @@ Pour pouvoir utiliser le système TRADFRI IKEA sous [JEEDOM](https://www.jeedom.
 **ATTENTION**: 
 * pour une utilisation classique de Jeedom avec des pluggins, il faut attendre le pluggin officiel de gestion TRADFRI en cours de développement par l'équipe JEEDOM.
 
-* L'utilisation n'est donc pas du type plugins JEEDOM, et il s'adresse donc a des utilisateurs avertis de JEEDOM qui connaisent un peu la programmation sous Linux et qui veulent dès à présent intégrer le système TRADFRI à leur système JEEDOM, et l'adapter à leur configuration.
+* L'utilisation n'est donc pas du type plugins JEEDOM, et il s'adresse donc a des utilisateurs avertis de JEEDOM qui connaissent un peu la programmation sous Linux et qui veulent dès à présent intégrer le système TRADFRI à leur système JEEDOM, et l'adapter à leur configuration.
 
 Sur mon interface JEEDOM j'ai des widgets lumières (virtuels) ,par exemple pour les lumières de l'escalier et de la salle TV, avec une gestion de l'intensité et le test de l'accès des lampes avec le pont : cela permet en particulier de savoir si la lampe est allimentée ou si l'interrupteur n'est pas sur off (j'utilise le système TRADFRI sur une installation existante avec des interrupteurs physiques)
 
@@ -66,7 +66,7 @@ set_trafri.py on id1 id2 ...
 ```
 par exemple pour les lampes 65543 65544
 ```
-set_tradfri.py on 65543 65544 
+set_tradfri.py on 65543 65544
 
 Etat ampoule 65543
 name  Ampoule salle tv 1
