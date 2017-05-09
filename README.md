@@ -10,14 +10,14 @@ Pour pouvoir utiliser le système TRADFRI IKEA sous [JEEDOM](https://www.jeedom.
 
 * L'utilisation n'est donc pas du type plugins JEEDOM, et il s'adresse donc a des utilisateurs avertis de JEEDOM qui connaisent un peu la programmation sous Linux et qui veulent dès à présent intégrer le système TRADFRI à leur système JEEDOM, et l'adapter à leur configuration.
 
-Sur mon interface JEEDOM j'ai donc des widgets lumières,par exemple pour les lumières de l'escalier et de la salle TV, avec une gestion de l'intensité et le test de l'accès des lampes avec le pont : cela permet en particulier si la lampe est allimentée et si l'interrupteur n'est pas sur off (j'utilise le système TRADFRI sur une installation existante avec des interrupteurs physiques)
+Sur mon interface JEEDOM j'ai des widgets lumières (virtuels) ,par exemple pour les lumières de l'escalier et de la salle TV, avec une gestion de l'intensité et le test de l'accès des lampes avec le pont : cela permet en particulier de savoir si la lampe est allimentée ou si l'interrupteur n'est pas sur off (j'utilise le système TRADFRI sur une installation existante avec des interrupteurs physiques)
 
 ![interface JEEDOM](https://github.com/mbuffat/Tradfri-JEEDOM/blob/master/tradfri.png)
 
-Un programme daemon tourne en arrière plan et permet la mise à jour des widgets sous JEEDOM (etat des lampes, intensité, test si la lampe est joignable (reach)). Il permet de remonter sous JEEDOM les actions extérieures qui modifient l'etat des lampes (interrupteur, application smartphone, télècommande,...).
-Un second programme permet d'interagir avec le pont TRADFRI pour le scommandes on, off et bright (intensité). Je ne gère pas pour le moment la couleur des lampes car je n'en ai pas l'utilité.
+Un programme daemon tourne en arrière plan et permet la mise à jour des widgets sous JEEDOM (état des lampes, intensité, test si la lampe est joignable (reach)). Il permet de remonter sous JEEDOM les actions extérieures qui modifient l'etat des lampes (interrupteur, application smartphone, télècommande,...).
+Un second programme permet d'interagir avec le pont TRADFRI pour les commandes **on, off et bright** (intensité). Je ne gère pas pour le moment la couleur des lampes car je n'en ai pas l'utilité.
 
-L'utilisation de ces 2 codes nécéessitent cependant une configuration manuelle, fonction de l'installation.
+**ATTENTION** L'utilisation de ces 2 codes nécéssitent cependant une configuration manuelle, fonction de l'installation.
 
 ## Installation
 Il faut installer la bibliothèque python3 pytradfri (instructions tirées de [https://github.com/ggravlingen/pytradfri](https://github.com/ggravlingen/pytradfri)).
@@ -39,7 +39,7 @@ puis installer ensuite la librairie pytradfri avec pip3 (version python3)
 ```
 pip3 install pytradfri
 ```
-Le principe est d'avoir un daemon ("pytradfridaemon.py") qui met à jour l'état des ampoules dans les widgets sous Jeedom et un programme ("set_trafri.py") qui contrôle les ampoules (les allume ou les éteinds) depuis JEEDOM.
+Le principe est d'avoir un daemon (**pytradfridaemon.py**) qui met à jour l'état des ampoules dans les widgets sous Jeedom et un programme (**set_trafri.py**) qui contrôle les ampoules (les allume ou les éteinds) depuis JEEDOM.
 
 ## set_tradfri.py: programme d'action sur le pont
 Pour manipuler les ampoules, j'utilise le programme python: **set_trafri.py.**
@@ -53,21 +53,18 @@ set_tradfri.py
 liste les equipements du pont
 ```
 syntaxe: set_tradfri [on/off/dim] [val] ampoules_id
-
         Pont TRADFRI ip: 192.168.0.73
-
     devices 9
-[<65541 - Variateur salle tv (TRADFRI wireless dimmer)>, <65539 - Détecteur Escalier bas (TRADFRI motion sensor)>, <65536 - Détecteur Escalier (TRADFRI motion sensor)>, <65538 - Ampoule Escalier 2 (TRADFRI bulb E27 opal 1000lm)>, <65544 - ampoule salle tv 2 (TRADFRI bulb GU10 WS 400lm)>, <65543 - Ampoule salle tv 1 (TRADFRI bulb GU10 WS 400lm)>, <65542 - Ampoule couloir bas (TRADFRI bulb E27 opal 1000lm)>, <65540 - Ampoule Escalier bas (TRADFRI bulb E27 opal 1000lm)>, <65537 - Ampoule Escalier 1 (TRADFRI bulb E14 WS opal 400lm)>]
-
+[<65541 - Variateur salle tv (TRADFRI wireless dimmer)>, <65539 - Détecteur Escalier bas (TRADFRI motion sensor)>, ...
     liste des ampoules 6
-[<65538 - Ampoule Escalier 2 (TRADFRI bulb E27 opal 1000lm)>, <65544 - ampoule salle tv 2 (TRADFRI bulb GU10 WS 400lm)>, <65543 - Ampoule salle tv 1 (TRADFRI bulb GU10 WS 400lm)>, <65542 - Ampoule couloir bas (TRADFRI bulb E27 opal 1000lm)>, <65540 - Ampoule Escalier bas (TRADFRI bulb E27 opal 1000lm)>, <65537 - Ampoule Escalier 1 (TRADFRI bulb E14 WS opal 400lm)>] 
+[<65538 - Ampoule Escalier 2 (TRADFRI bulb E27 opal 1000lm)>, <65544 - ampoule salle tv 2 (TRADFRI bulb GU10 WS 400lm)...
 ```
 
-Pour allumer une liste d'ampoules de numero id1 id2 id2, on utilise la commande on (ou off pour éteindre)
+Pour allumer une liste d'ampoules de numero id1 id2 id2, on utilise la commande on (ou off pour éteindre) suivante
 ```
 set_trafri.py on id1 id2 ...
 ```
-par exemple:
+par exemple pour les lampes 65543 65544
 ```
 set_tradfri.py on 65543 65544 
 
@@ -80,9 +77,7 @@ name  ampoule salle tv 2
 state  True
 dimmmer  200
 ```
-idem pour la commande off.
-
-Pour gérer l'intensité, on utilise la commande dim (gestion de l'intensité) en passant en parametre la valeur de l'itensité de 0 à 255, par exemple:
+Pour gérer l'intensité, on utilise la commande **dim** (gestion de l'intensité) en passant en parametre la valeur de l'itensité de 0 à 255, par exemple:
 ```
 set_tradfri.py dim 100 65543 65544 
 
@@ -128,3 +123,6 @@ et on execute les commandes systèmes suivantes:
 systemctl enable tradfridaemon
 systemctl start tradfridaemon
 ```
+
+** bilan **
+Ces programmes sont utilisables et modifiables suivant la licence libre GNU.
