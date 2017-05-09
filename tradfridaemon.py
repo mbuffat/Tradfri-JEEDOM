@@ -216,9 +216,16 @@ def internet(host="127.0.0.1", port=53, timeout=5):
        return False 
 #
 print("\tdaemon TRADFRI pour interface JEEDOM\n")
-# test connection externe 
-while not internet(host=IP_JEEDOM, port=80):
-      time.sleep(10)
+#
+# test argument -f pour eliminer le test de connection et l'attente
+#
+if (len(sys.argv)==1) or (sys.argv[1] != '-f') :
+   # test connection externe 
+   print("test connection internet ")
+   while not internet(host=IP_JEEDOM, port=80):
+        time.sleep(10)
+   #
+   time.sleep(60)
 #
 # lecture des equipements lumieres JEEDOM
 #
