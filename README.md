@@ -7,7 +7,7 @@ Pour pouvoir utiliser le système TRADFRI IKEA sous [JEEDOM](https://www.jeedom.
 
 **ATTENTION**: pour une utilisation classique de Jeedom avec des pluggins, il faut attendre le pluggin officiel de gestion TRADFRI en cours de développement par l'équipe JEEDOM.
 
-L'utilisation n'est donc pas du type plugins JEEDOM, et il s'adresse donc a des utilisateurs avertis de JEEDOM qui connaisent un peu la programmation sous Linux et qui veulent dès à présent intégrer le système TRADFRI à leur système JEEDOM, et l'adapter à leur configuration.
+* L'utilisation n'est donc pas du type plugins JEEDOM, et il s'adresse donc a des utilisateurs avertis de JEEDOM qui connaisent un peu la programmation sous Linux et qui veulent dès à présent intégrer le système TRADFRI à leur système JEEDOM, et l'adapter à leur configuration.*
 
 Sur mon interface JEEDOM j'ai donc des widgets lumières,par exemple pour les lumières de l'escalier et de la salle TV, avec une gestion de l'intensité et le test de l'accès des lampes avec le pont : cela permet en particulier si la lampe est allimentée et si l'interrupteur n'est pas sur off (j'utilise le système TRADFRI sur une installation existante avec des interrupteurs physiques)
 
@@ -41,7 +41,7 @@ pip3 install pytradfri
 Le principe est d'avoir un daemon ("pytradfridaemon.py") qui met à jour l'état des ampoules dans les widgets sous Jeedom et un programme ("set_trafri.py") qui contrôle les ampoules (les allume ou les éteinds) depuis JEEDOM.
 
 ## set_tradfri.py: programme d'action sur le pont
-Pour manipuler les ampoules, j'utilise le programme python: set_trafri.py.
+Pour manipuler les ampoules, j'utilise le programme python: **set_trafri.py.**
 
 Avant de l'utiliser il faut le configurer en spécifiant l'adresse IP du pont et sa clé (écrite sous le boitier).
 
@@ -97,7 +97,7 @@ dimmmer  100
 
 ## daemon : tradfridaemon.py
 
-ce daemon tourne en permanence et met à jour (toutes les 2 secondes) les widgets sous JEEDOM (etat des lampes, intensité, tests i joignable).
+Le daemon **tradfridaemon.py** tourne en permanence et met à jour (toutes les 2 secondes) les widgets sous JEEDOM (etat des lampes, intensité, tests i joignable).
 Il permet de remonter sous JEEDOM les actions extérieures qui modifient l'etat des lampes (interrupteur, application smartphone, telecommande,...).
 On peut le configurer en tant que service systemctl permettant ainsi sa gestion automatique par l'OS.
 
@@ -119,8 +119,8 @@ en suivant l'exemple suivant:
 Avec les scénarios on associe les commandes on,off,setbright à la commande set_tradfri.py pour executer les commandes de contrôle sous JEEDOM.
 
 ## creation du service
-pour installer le daemon en tant que service, on place le fichier tradfridaemon.service dans /etc/systemd/system
-et le daemon tradfridaemon.py dans /usr/local/sbin/
+pour installer le daemon en tant que service, on place le fichier **tradfridaemon.service** dans **/etc/systemd/system**
+et le daemon **tradfridaemon.py** dans **/usr/local/sbin/**
 
 et on execute les commandes systèmes suivantes:
 ```
