@@ -1,7 +1,5 @@
 #! /usr/bin/env python3
-# -*- coding: utf-8 -*
-# daemon tradfy pour interface JEEDOM
-# M. BUFFAT
+# daemon tradfy 
 import sys
 import time
 import socket
@@ -12,13 +10,13 @@ import pprint
 
 # pont tradfri
 IP     ="xxxxx"
-KEY    ="xxx"
-IKEA_ID=[65538,65544,65540]
+KEY    ="yyyyy"
+IKEA_ID=[nnnn,]
 # Jeedom
-IP_JEEDOM  = "xxx"
+IP_JEEDOM  = "xxxxxxxxx"
 URL_JEEDOM = "http://127.0.0.1/core/api/jeeApi.php"
-API_KEY    = "xxx"
-JEEDOM_ID  =["617","681","680"]
+API_KEY    = "yyyyyyyy"
+JEEDOM_ID  =["nnnn",]
 
 #
 DEBUG=False
@@ -34,7 +32,7 @@ def JeedomAPI(ID="0",methode="ping"):
          "params": DATA,
     }                                                                     
     response = requests.post(URL_JEEDOM, data=json.dumps(PARAMS), headers=HEADERS)
-    if response.status_code != 200 :
+    if not response.ok :
         print("Erreur API:",ID,methode," code:",response.status_code)
     return response
 #
@@ -44,7 +42,7 @@ def JeedomCmd(ID,val=None):
     else:
         DATA={"apikey" : API_KEY , "type" : 'cmd' , "id" : int(ID), }
     response = requests.post(URL_JEEDOM, params=DATA)
-    if response.status_code != 200 :
+    if not response.ok :
         print("CMD:",ID,val," code:",response.status_code)
     #print(response.url)
     return response
@@ -54,7 +52,8 @@ def JeedomCmd(ID,val=None):
 class EquiptJEEDOM():
     """ gestion des widgets Lumieres Jeedom"""
     def __init__(self,lumid):
-        JeedomAPI()
+        rep=JeedomAPI()
+        rep.close()
         self.LumId=lumid.copy()
         N=len(self.LumId)
         self.EtatId     = [None]*N
@@ -65,7 +64,8 @@ class EquiptJEEDOM():
         self.ReachId    = [None]*N
         self.SetReachId = [None]*N
         for k,lum in enumerate(self.LumId):
-            rep = JeedomAPI(lum,"eqLogic::fullById").json()['result']['cmds']
+            reponse = JeedomAPI(lum,"eqLogic::fullById")
+            rep= reponse.json()['result']['cmds']
             for cmd in rep:
                 nom=cmd['name']
                 # print(nom)
@@ -83,6 +83,7 @@ class EquiptJEEDOM():
                     self.ReachId[k] = cmd['id']
                 elif nom== "setreach":
                     self.SetReachId[k] = cmd['id']
+            reponse.close()
         # variables d'etat
         self.etat=[None]*N
         self.reach=[None]*N
@@ -94,12 +95,18 @@ class EquiptJEEDOM():
         N=len(self.LumId)
         for k in range(N):
             # lecture etat
-            rep = JeedomAPI(self.EtatId[k],"cmd::execCmd").json()['result']
+            reponse = JeedomAPI(self.EtatId[k],"cmd::execCmd")
+            rep = reponse.json()['result']
             self.etat[k]=int(rep['value'])
-            rep = JeedomAPI(self.ReachId[k],"cmd::execCmd").json()['result']
+            reponse.close()
+            reponse = JeedomAPI(self.ReachId[k],"cmd::execCmd")
+            rep = reponse.json()['result']
             self.reach[k]=int(rep['value'])
-            rep = JeedomAPI(self.BrightId[k],"cmd::execCmd").json()['result']
+            reponse.close()
+            reponse = JeedomAPI(self.BrightId[k],"cmd::execCmd")
+            rep = reponse.json()['result']
             self.bright[k]=int(rep['value'])
+            reponse.close()
         return
     def info(self):
         """ affiche etat """
@@ -113,19 +120,25 @@ class EquiptJEEDOM():
     def set_state(self,k,on=True):
         if on :
             rep = JeedomCmd(self.SetOnId[k])
+            rep.close()
         else:
             rep = JeedomCmd(self.SetOffId[k])
+            rep.close()
         return
     def set_reach(self,k,state=True):
         if state :
             rep = JeedomCmd(self.SetReachId[k],100)
+            rep.close()
         else :
             rep = JeedomCmd(self.SetReachId[k],0)
+            rep.close()
             rep = JeedomCmd(self.SetOffId[k])
+            rep.close()
         return
     def set_bright(self,k,level=0):
         rep = JeedomCmd(self.SetBrightId[k],level)
         self.bright[k]=level
+        rep.close()
         return
 #
 # equipements IKEA
@@ -220,13 +233,12 @@ print("\tdaemon TRADFRI pour interface JEEDOM\n")
 # test argument -f pour eliminer le test de connection et l'attente
 #
 if (len(sys.argv)==1) or (sys.argv[1] != '-f') :
-   # test connection externe 
-   print("test connection internet ")
-   while not internet(host=IP_JEEDOM, port=80):
-        time.sleep(10)
-   #
-   time.sleep(60)
-#
+    # test connection externe 
+    print("test connection internet ")
+    while not internet(host=IP_JEEDOM, port=80):
+      time.sleep(10)
+    #
+    time.sleep(60)
 # lecture des equipements lumieres JEEDOM
 #
 eqJEEDOM=EquiptJEEDOM(JEEDOM_ID)
