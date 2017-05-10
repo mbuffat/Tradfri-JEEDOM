@@ -5,22 +5,22 @@ import time
 import socket
 import pytradfri
 import json
-import requests
+import requests,logging
 import pprint
 
 # pont tradfri
-IP     ="xxxxx"
-KEY    ="yyyyy"
-IKEA_ID=[nnnn,]
+IP     ="xxxx"
+KEY    ="yyyy"
+IKEA_ID=[65538,]
 # Jeedom
-IP_JEEDOM  = "xxxxxxxxx"
+IP_JEEDOM  = "xxxxxx"
 URL_JEEDOM = "http://127.0.0.1/core/api/jeeApi.php"
-API_KEY    = "yyyyyyyy"
-JEEDOM_ID  =["nnnn",]
+API_KEY    = "yyyyy"
+JEEDOM_ID  =["617",]
 
 #
 DEBUG=False
-
+SESSION_JEEDOM=None
 #
 def JeedomAPI(ID="0",methode="ping"):
     HEADERS = {'content-type': 'application/json'}
@@ -31,7 +31,7 @@ def JeedomAPI(ID="0",methode="ping"):
          "jsonrpc" : "2.0",
          "params": DATA,
     }                                                                     
-    response = requests.post(URL_JEEDOM, data=json.dumps(PARAMS), headers=HEADERS)
+    response = SESSION_JEEDOM.post(URL_JEEDOM, data=json.dumps(PARAMS), headers=HEADERS)
     if not response.ok :
         print("Erreur API:",ID,methode," code:",response.status_code)
     return response
@@ -41,7 +41,7 @@ def JeedomCmd(ID,val=None):
         DATA={"apikey" : API_KEY , "type" : 'cmd' , "id" : int(ID), "slider" : val}
     else:
         DATA={"apikey" : API_KEY , "type" : 'cmd' , "id" : int(ID), }
-    response = requests.post(URL_JEEDOM, params=DATA)
+    response = SESSION_JEEDOM.post(URL_JEEDOM, params=DATA)
     if not response.ok :
         print("CMD:",ID,val," code:",response.status_code)
     #print(response.url)
@@ -83,7 +83,7 @@ class EquiptJEEDOM():
                     self.ReachId[k] = cmd['id']
                 elif nom== "setreach":
                     self.SetReachId[k] = cmd['id']
-            reponse.close()
+            #reponse.close()
         # variables d'etat
         self.etat=[None]*N
         self.reach=[None]*N
@@ -98,15 +98,15 @@ class EquiptJEEDOM():
             reponse = JeedomAPI(self.EtatId[k],"cmd::execCmd")
             rep = reponse.json()['result']
             self.etat[k]=int(rep['value'])
-            reponse.close()
+            #reponse.close()
             reponse = JeedomAPI(self.ReachId[k],"cmd::execCmd")
             rep = reponse.json()['result']
             self.reach[k]=int(rep['value'])
-            reponse.close()
+            #reponse.close()
             reponse = JeedomAPI(self.BrightId[k],"cmd::execCmd")
             rep = reponse.json()['result']
             self.bright[k]=int(rep['value'])
-            reponse.close()
+            #reponse.close()
         return
     def info(self):
         """ affiche etat """
@@ -120,25 +120,25 @@ class EquiptJEEDOM():
     def set_state(self,k,on=True):
         if on :
             rep = JeedomCmd(self.SetOnId[k])
-            rep.close()
+            #rep.close()
         else:
             rep = JeedomCmd(self.SetOffId[k])
-            rep.close()
+            #rep.close()
         return
     def set_reach(self,k,state=True):
         if state :
             rep = JeedomCmd(self.SetReachId[k],100)
-            rep.close()
+            #rep.close()
         else :
             rep = JeedomCmd(self.SetReachId[k],0)
-            rep.close()
+            #rep.close()
             rep = JeedomCmd(self.SetOffId[k])
-            rep.close()
+            #rep.close()
         return
     def set_bright(self,k,level=0):
         rep = JeedomCmd(self.SetBrightId[k],level)
         self.bright[k]=level
-        rep.close()
+        #rep.close()
         return
 #
 # equipements IKEA
@@ -230,7 +230,7 @@ def internet(host="127.0.0.1", port=53, timeout=5):
 #
 print("\tdaemon TRADFRI pour interface JEEDOM\n")
 #
-# test argument -f pour eliminer le test de connection et l'attente
+# test connection (argument -f pour eliminer le test de connection et l'attente)
 #
 if (len(sys.argv)==1) or (sys.argv[1] != '-f') :
     # test connection externe 
@@ -238,7 +238,11 @@ if (len(sys.argv)==1) or (sys.argv[1] != '-f') :
     while not internet(host=IP_JEEDOM, port=80):
       time.sleep(10)
     #
-    time.sleep(60)
+    time.sleep(30)
+#
+if DEBUG: logging.basicConfig(level=logging.INFO, format="%(message)s")
+
+SESSION_JEEDOM = requests.Session()
 # lecture des equipements lumieres JEEDOM
 #
 eqJEEDOM=EquiptJEEDOM(JEEDOM_ID)
