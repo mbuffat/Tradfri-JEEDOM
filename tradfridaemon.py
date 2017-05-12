@@ -9,14 +9,15 @@ import requests,logging
 import pprint
 
 # pont tradfri
-IP     ="xxxx"
-KEY    ="yyyy"
-IKEA_ID=[65538,]
+IP     ="xxxxx"
+KEY    ="yyyyy"
+IKEA_ID=[65538,65544,65540]
 # Jeedom
-IP_JEEDOM  = "xxxxxx"
-URL_JEEDOM = "http://127.0.0.1/core/api/jeeApi.php"
+IP_JEEDOM  = "xxxxx"
+#URL_JEEDOM = "http://127.0.0.1/core/api/jeeApi.php"
+URL_JEEDOM = "http://"+IP_JEEDOM+"/core/api/jeeApi.php"
 API_KEY    = "yyyyy"
-JEEDOM_ID  =["617",]
+JEEDOM_ID  =["617","681","680"]
 
 #
 DEBUG=False
@@ -230,17 +231,18 @@ def internet(host="127.0.0.1", port=53, timeout=5):
 #
 print("\tdaemon TRADFRI pour interface JEEDOM\n")
 #
-# test connection (argument -f pour eliminer le test de connection et l'attente)
 #
-if (len(sys.argv)==1) or (sys.argv[1] != '-f') :
+if (len(sys.argv)>1) and (sys.argv[1] != '-d') : DEBUG=True
+if DEBUG:
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+else:
     # test connection externe 
     print("test connection internet ")
     while not internet(host=IP_JEEDOM, port=80):
       time.sleep(10)
     #
-    time.sleep(30)
+    time.sleep(20)
 #
-if DEBUG: logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 SESSION_JEEDOM = requests.Session()
 # lecture des equipements lumieres JEEDOM
