@@ -28,7 +28,7 @@ devices = gateway.get_devices()
 lights = [dev for dev in devices if dev.has_light_control]
 #
 if (len(sys.argv) == 1):
-    print("\nsyntaxe: set_tradfri [on/off/dim/col] [val] ampoules_id\n")
+    print("\nsyntaxe: set_tradfri [on/off/dim/col] [dimval/cold/normal/warm] ampoules_id\n")
     print("\t\tPont TRADFRI ip:",IP)
     print("\n\tdevices %d"%len(devices))
     print(devices)
