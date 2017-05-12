@@ -4,6 +4,11 @@
 
 ## mise a jour ##
  - utilisation d'un fichier de configuration tradfri.cfg a mettre dans /etc/tradfri.cfg ou dans le repertoire courant
+ - gestion de la couleur des lampes dans **set_tradfri.py** option col
+
+set_tradfri.py col [warm/normal/cold]
+
+pour choisir un blanc chaud, normal ou froid
 
 ## Introduction
 Pour pouvoir utiliser le système TRADFRI IKEA sous [JEEDOM](https://www.jeedom.com), le programme de domotique que j'utilise chez moi, j'ai développé une série de programmes python pour la gestion des lumières IKEA avec JEEDOM.
