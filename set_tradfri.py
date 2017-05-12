@@ -8,10 +8,16 @@
 import sys
 import pytradfri
 import time
-
-# adresse du pont
-IP="xxxxx"
-KEY="xxxxxx"
+import configparser
+#
+# lecture configuration dans tradfri.cfg
+#
+conf = configparser.ConfigParser()
+# repertoire courant ou dans /etc
+conf.read(['tradfri.cfg','/etc/tradfri.cfg'])
+# pont tradfri
+IP     = conf.get('IKEA','IP')
+KEY    = conf.get('IKEA','KEY')
 
 # configuration variables. 
 api = pytradfri.coap_cli.api_factory(IP, KEY)

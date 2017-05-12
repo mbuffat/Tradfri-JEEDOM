@@ -2,6 +2,9 @@
 
 # Interface Jeedom avec le système TRADFRI IKEA pour la gestion des lumières
 
+## mise a jour ##
+ - utilisation d'un fichier de configuration tradfri.cfg a mettre dans /etc/tradfri.cfg ou dans le repertoire courant
+
 ## Introduction
 Pour pouvoir utiliser le système TRADFRI IKEA sous [JEEDOM](https://www.jeedom.com), le programme de domotique que j'utilise chez moi, j'ai développé une série de programmes python pour la gestion des lumières IKEA avec JEEDOM.
 
@@ -44,7 +47,7 @@ Le principe est d'avoir un daemon (**pytradfridaemon.py**) qui met à jour l'ét
 ## set_tradfri.py: programme d'action sur le pont
 Pour manipuler les ampoules, j'utilise le programme python: **set_trafri.py.**
 
-Avant de l'utiliser il faut le configurer en spécifiant l'adresse IP du pont et sa clé (écrite sous le boitier).
+Avant de l'utiliser il faut le configurer en spécifiant l'adresse IP du pont et sa clé (écrite sous le boitier). 
 
 Sans argument, il donne la liste des equipements tradfri et il permet d'avoir le numero (id) des ampoules installées.
 ```

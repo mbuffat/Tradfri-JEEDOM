@@ -6,18 +6,7 @@ import socket
 import pytradfri
 import json
 import requests,logging
-import pprint
-
-# pont tradfri
-IP     ="xxxxx"
-KEY    ="yyyyy"
-IKEA_ID=[65538,65544,65540]
-# Jeedom
-IP_JEEDOM  = "xxxxx"
-#URL_JEEDOM = "http://127.0.0.1/core/api/jeeApi.php"
-URL_JEEDOM = "http://"+IP_JEEDOM+"/core/api/jeeApi.php"
-API_KEY    = "yyyyy"
-JEEDOM_ID  =["617","681","680"]
+import configparser
 
 #
 DEBUG=False
@@ -55,7 +44,7 @@ class EquiptJEEDOM():
     def __init__(self,lumid):
         rep=JeedomAPI()
         rep.close()
-        self.LumId=lumid.copy()
+        self.LumId=[int(l) for l in lumid]
         N=len(self.LumId)
         self.EtatId     = [None]*N
         self.SetOnId    = [None]*N
@@ -147,14 +136,14 @@ class EquiptJEEDOM():
 class EquiptIKEA():
     def __init__(self,id_ikea):
         """ init eqt lampe IKEA """
-        self.IdIkea=id_ikea.copy()
+        self.IdIkea=[int(l) for l in id_ikea]
         N = len(self.IdIkea)
         # init pont
-        api = pytradfri.coap_cli.api_factory(IP, KEY)
-        gateway = pytradfri.gateway.Gateway(api)
+        self.api = pytradfri.coap_cli.api_factory(IP, KEY)
+        self.gateway = pytradfri.gateway.Gateway(self.api)
         # liste des lumieres
-        devices = gateway.get_devices()
-        lights = [dev for dev in devices if dev.has_light_control]
+        self.devices = self.gateway.get_devices()
+        lights = [dev for dev in self.devices if dev.has_light_control]
         # Print all lights
         print("Liste des ampoules IKEA")
         for light in lights:
@@ -230,14 +219,32 @@ def internet(host="127.0.0.1", port=53, timeout=5):
        return False 
 #
 print("\tdaemon TRADFRI pour interface JEEDOM\n")
+if (len(sys.argv)>1) and (sys.argv[1] == '-d') : DEBUG=True
 #
+# lecture configuration dans tradfri.cfg
 #
-if (len(sys.argv)>1) and (sys.argv[1] != '-d') : DEBUG=True
+conf = configparser.ConfigParser()
+# repertoire courant ou dans /etc
+conf.read(['tradfri.cfg','/etc/tradfri.cfg'])
+# pont tradfri
+IP     = conf.get('IKEA','IP')
+KEY    = conf.get('IKEA','KEY')
+IKEA_ID= conf.get('IKEA','IKEA_ID').split(sep=",")
+if DEBUG: print("IKEA cfg:",IP,KEY,IKEA_ID)
+# Jeedom
+IP_JEEDOM  = conf.get('JEEDOM','IP_JEEDOM')
+API_KEY    = conf.get('JEEDOM','API_KEY')
+JEEDOM_ID  = conf.get('JEEDOM','JEEDOM_ID').split(sep=",")
+if DEBUG: print("JEEDOM cfg:",IP_JEEDOM,API_KEY,JEEDOM_ID)
+
+URL_JEEDOM = "http://"+IP_JEEDOM+"/core/api/jeeApi.php"
+
+#
 if DEBUG:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 else:
     # test connection externe 
-    print("test connection internet ")
+    print("test connection internet :",IP_JEEDOM)
     while not internet(host=IP_JEEDOM, port=80):
       time.sleep(10)
     #
