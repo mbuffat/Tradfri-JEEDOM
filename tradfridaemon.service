@@ -1,7 +1,6 @@
 [Unit]
 Description= interface lumiere TRADFRI / JEEDOM 
-#After=multi-user.target syslog.target network.target network-online.target
-After = systemd-user-sessions.service network.target sound.target
+After = systemd-user-sessions.service network.target network-online.target
 
 [Service]
 PIDFile=/var/run/tradfridaemon.pid
