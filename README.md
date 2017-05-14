@@ -120,7 +120,8 @@ Il faut donc d'abord créer autant de virtuels (widget lumiere) sous JEEDOM que 
 en suivant l'exemple suivant:
 ![widget JEEDOM](https://github.com/mbuffat/Tradfri-JEEDOM/blob/master/jeedom.png)
 
-Avec les scénarios on associe les commandes on,off,setbright à la commande set_tradfri.py pour executer les commandes de contrôle sous JEEDOM.
+Avec les scénarios on associe les commandes on,off,setbright à la commande set_tradfri.py pour executer les commandes de contrôle sous JEEDOM comme ci-dessous
+![scenario JEEDOM](https://github.com/mbuffat/Tradfri-JEEDOM/blob/master/scenario.png)
 
 ## creation du service
 pour installer le daemon en tant que service, on place le fichier **tradfridaemon.service** dans **/etc/systemd/system**

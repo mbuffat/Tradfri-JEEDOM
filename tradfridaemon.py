@@ -248,7 +248,7 @@ else:
     while not internet(host=IP_JEEDOM, port=80):
       time.sleep(10)
     #
-    time.sleep(20)
+    time.sleep(40)
 #
 
 SESSION_JEEDOM = requests.Session()
@@ -279,7 +279,7 @@ while True :
             if DEBUG:
                 eqIkea.info()
                 eqJEEDOM.info()
-    time.sleep(5)
+    time.sleep(30)
 # fin
 sys.exit(0)
 
