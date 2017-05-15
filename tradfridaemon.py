@@ -189,9 +189,16 @@ class EquiptIKEA():
         for k in range(N):
             light = self.LightIkea[k]
             light.device.update()
-            print("Eqt[%d] %s reach:%s,%s state=%s,%s dim=%d,%d col=%s "
+            if DEBUG: print(light.device.id,light.device.name,light.device.reachable,
+                            light.state,light.dimmer,light.hex_color)
+            if light.device.reachable:
+                print("Eqt[%d] %s reach:%s,%s state=%s,%s dim=%d,%d col=%s "
                         %(light.device.id,light.device.name,light.device.reachable,self.reach[k],
                           light.state,self.state[k],light.dimmer,self.dimmer[k],light.hex_color))
+            else :
+                print("Eqt[%d] %s reach:%s,%s state=%s,%s"
+                        %(light.device.id,light.device.name,light.device.reachable,self.reach[k],
+                          light.state,self.state[k]))
         return
 
     def set_state(self,k,on=True):
@@ -279,7 +286,7 @@ while True :
             if DEBUG:
                 eqIkea.info()
                 eqJEEDOM.info()
-    time.sleep(30)
+    time.sleep(20)
 # fin
 sys.exit(0)
 

@@ -10,6 +10,9 @@ set_tradfri.py col [warm/normal/cold]
 
 pour choisir un blanc chaud, normal ou froid
 
+voir aussi le forum jeedom:
+[Forum JEEDOM](https://www.jeedom.com/forum/viewtopic.php?f=31&t=26632)
+
 ## Introduction
 Pour pouvoir utiliser le système TRADFRI IKEA sous [JEEDOM](https://www.jeedom.com), le programme de domotique que j'utilise chez moi, j'ai développé une série de programmes python pour la gestion des lumières IKEA avec JEEDOM.
 
