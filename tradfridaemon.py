@@ -145,9 +145,10 @@ class EquiptIKEA():
         self.devices = self.gateway.get_devices()
         lights = [dev for dev in self.devices if dev.has_light_control]
         # Print all lights
-        print("Liste des ampoules IKEA")
-        for light in lights:
-            print("\t",light.id,light.name,light.light_control.lights[0])
+        if DEBUG:
+            print("Liste des ampoules IKEA")
+            for light in lights:
+                print("\t",light.id,light.name,light.light_control.lights[0])
         # 
         self.LightIkea=[None]*N
         for k in range(N):
@@ -277,6 +278,8 @@ eqJEEDOM.info()
 print("Boucle sur %d Equipt "%(N))
 sys.stdout.flush()
 while True :
+    eqIkea=EquiptIKEA(IKEA_ID)
+    N = len(eqIkea.LightIkea)
     for k in range(N):
         if eqIkea.check_state(k):
             print("Changement etat equipement ",k)
@@ -286,7 +289,7 @@ while True :
             if DEBUG:
                 eqIkea.info()
                 eqJEEDOM.info()
-    time.sleep(20)
+    time.sleep(30)
 # fin
 sys.exit(0)
 
