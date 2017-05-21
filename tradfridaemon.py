@@ -275,7 +275,8 @@ for k in range(N):
 eqIkea.info()
 eqJEEDOM.info()
 
-print("Boucle sur %d Equipt "%(N))
+eqIkea=None
+print("\tBoucle sur %d Equipt "%(N))
 sys.stdout.flush()
 while True :
     eqIkea=EquiptIKEA(IKEA_ID)
@@ -286,10 +287,14 @@ while True :
             eqJEEDOM.set_state(k,eqIkea.state[k])
             eqJEEDOM.set_bright(k,eqIkea.dimmer[k])
             eqJEEDOM.set_reach(k,eqIkea.reach[k])
-            if DEBUG:
-                eqIkea.info()
-                eqJEEDOM.info()
-    time.sleep(30)
+    if DEBUG:
+        eqIkea.info()
+        eqJEEDOM.info()
+    delai=20
+    if DEBUG:
+        print("sleep ",delai)
+    time.sleep(delai)
+    eqIkea=None
 # fin
 sys.exit(0)
 

@@ -28,7 +28,7 @@ devices = gateway.get_devices()
 lights = [dev for dev in devices if dev.has_light_control]
 #
 if (len(sys.argv) == 1):
-    print("\nsyntaxe: set_tradfri [on/off/dim/col] [dimval/cold/normal/warm] ampoules_id\n")
+    print("\nsyntaxe: set_tradfri [on/off/status/dim/col] [val/cold/normal/warm] ampoules_id\n")
     print("\t\tPont TRADFRI ip:",IP)
     print("\n\tdevices %d"%len(devices))
     print(devices)
@@ -50,12 +50,14 @@ elif sys.argv[1] == "col":
 elif sys.argv[1] == "on" :
     state= True
     ampoulesId = [int(sys.argv[k]) for k in range(2,len(sys.argv))]
-else:
+elif sys.argv[1] == "off":
     state= False
+    ampoulesId = [int(sys.argv[k]) for k in range(2,len(sys.argv))]
+else :
     ampoulesId = [int(sys.argv[k]) for k in range(2,len(sys.argv))]
 #
 for ampoule in ampoulesId :
-   print("Etat ampoule %d"%(ampoule))
+   print("\tAmpoule %d"%(ampoule))
    # device
    for light in lights:
         if light.id == ampoule :
@@ -65,14 +67,18 @@ for ampoule in ampoulesId :
    # change etat
    if dim!= None :
         Light.device.light_control.set_dimmer(dim)
+        Light.device.update()
    elif color != None:
         Light.device.light_control.set_hex_color(color)
-   else:
+        Light.device.update()
+   elif state != None:
         Light.device.light_control.set_state(state)
-   Light.device.update()
-   print("name    ",Light.device.name)
-   print("state   ",Light.state)
-   print("dimmmer ",Light.dimmer)
-   print("color   ",Light.hex_color)
+        Light.device.update()
+   else:
+        print("name    ",Light.device.name)
+        print("state   ",Light.state)
+        print("dimmmer ",Light.dimmer)
+        print("color   ",Light.hex_color)
+        print("reach   ",Light.device.reachable)
 #
 sys.exit(0)
