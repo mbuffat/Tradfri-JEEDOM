@@ -275,12 +275,11 @@ for k in range(N):
 eqIkea.info()
 eqJEEDOM.info()
 
-eqIkea=None
-print("\tBoucle sur %d Equipt "%(N))
+print("\tBoucle sur %d Equipt\n\t================\n"%N)
 sys.stdout.flush()
 while True :
-    eqIkea=EquiptIKEA(IKEA_ID)
-    N = len(eqIkea.LightIkea)
+    #eqIkea=EquiptIKEA(IKEA_ID)
+    #N = len(eqIkea.LightIkea)
     for k in range(N):
         if eqIkea.check_state(k):
             print("Changement etat equipement ",k)
@@ -294,7 +293,6 @@ while True :
     if DEBUG:
         print("sleep ",delai)
     time.sleep(delai)
-    eqIkea=None
 # fin
 sys.exit(0)
 
