@@ -34,14 +34,18 @@ COL={'warm':'efd275','normal':'f1e0b5','cold':'f5faf6'}
 api     = api_factory(IP, KEY)
 gateway = Gateway()
 
-# recuperation info
+# recuperation des lampes
 devices_command  = gateway.get_devices()
 devices_commands = api(devices_command)
 devices = api(*devices_commands)
 if DEBUG: print("devices:",devices)
 lights = [dev for dev in devices if dev.has_light_control]
 if DEBUG: print("lights:",lights)
-#
+# et des taches
+tasks_command = gateway.get_smart_tasks()
+tasks = api(tasks_command)
+
+# syntaxe
 if (len(sys.argv) == 1):
     print("\nsyntaxe: set_tradfri [-d] [on/off/status/dim/col] [val/cold/normal/warm] ampoules_id\n")
     print("\t\tPont TRADFRI ip:",IP)
@@ -51,6 +55,7 @@ if (len(sys.argv) == 1):
     print("\n\tliste des ampoules %d"%len(lights))
     print(lights,"\n")
     sys.exit(0)
+
 # allume ou eteinds les ampoules
 dim   = None
 state = None
@@ -75,38 +80,46 @@ else :
 for ampoule in ampoulesId :
    print("\tAmpoule %d"%(ampoule))
    # device
+   Light =None
    for light in lights:
         if light.id == ampoule :
-            Light = light.light_control.lights[0]
+            Light = light
             break
    # ampoule associée
+   if Light==None:
+       print("ERREUR: aucune ampoulei trouvee ",Light)
+       continue
    # change etat si branchee
-   if Light.device.reachable:
+   if Light.reachable:
         if dim!= None :
             if DEBUG: print("set dim ",dim)
-            Light.device.light_control.set_dimmer(dim)
-            Light.device.update()
+            dim_command = Light.light_control.set_dimmer(dim)
+            api(dim_command)
+            update_command=Light.update()
+            api(update_command)
         elif color != None:
             if DEBUG: print("set color ",color)
-            Light.device.light_control.set_hex_color(color)
-            Light.device.update()
+            color_command=Light.light_control.set_hex_color(color)
+            api(color_command)
+            update_command=Light.update()
+            api(update_command)
         elif state != None:
             if DEBUG: print("set state ",state)
-            Light.device.light_control.set_state(state)
-            Light.device.update()
+            state_command=Light.light_control.set_state(state)
+            api(state_command)
+            update_command=Light.update()
+            api(update_command)
         else:
-            print("name    ",Light.device.name)
-            print("state   ",Light.state)
-            print("dimmmer ",Light.dimmer)
-            print("color   ",Light.hex_color)
-            print("reach   ",Light.device.reachable)
+            print("name    ",Light.name)
+            print("state   ",Light.light_control.lights[0].state)
+            print("dimmmer ",Light.light_control.lights[0].dimmer)
+            print("color   ",Light.light_control.lights[0].hex_color)
+            print("reach   ",Light.reachable)
    else:
         # cas non branche
             print("Attention ampoule non branchée")
-            print("name    ",Light.device.name)
+            print("name    ",Light.name)
             print("state   ",False)
-            print("dimmmer ",Light.dimmer)
-            print("color   ",Light.hex_color)
-            print("reach   ",Light.device.reachable)
+            print("reach   ",Light.reachable)
 #
 sys.exit(0)

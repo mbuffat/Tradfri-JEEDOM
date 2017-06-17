@@ -163,32 +163,33 @@ class EquiptIKEA():
             Id = self.IdIkea[k]
             for light in lights:
                 if light.id == Id :
-                        self.LightIkea[k]=light.light_control.lights[0]
+                        self.LightIkea[k]=light
         self.reach =[None]*N
         self.state =[None]*N
         self.dimmer=[None]*N
         self.col   =[None]*N
         for k in range(N):
             light=self.LightIkea[k]
-            self.reach[k] = light.device.reachable
-            self.state[k] = light.state
-            self.dimmer[k]= light.dimmer
-            self.col[k]   = light.hex_color
+            self.reach[k] = light.reachable
+            self.state[k] = light.light_control.lights[0].state
+            self.dimmer[k]= light.light_control.lights[0].dimmer
+            self.col[k]   = light.light_control.lights[0].hex_color
         return
     
     def check_state(self,k):
         """ test si l'etat a change """
         change=False
         light=self.LightIkea[k]
-        light.device.update()
-        if light.device.reachable != self.reach[k] :
-                self.reach[k] = light.device.reachable
+        update_command=light.update()
+        self.api(update_command)
+        if light.reachable != self.reach[k] :
+                self.reach[k] = light.reachable
                 change=True
-        if light.state != self.state[k] :
-                self.state[k] = light.state
+        if light.light_control.lights[0].state != self.state[k] :
+                self.state[k] = light.light_control.lights[0].state
                 change=True
-        if light.dimmer != self.dimmer[k] :
-                self.dimmer[k]= light.dimmer
+        if light.light_control.lights[0].dimmer != self.dimmer[k] :
+                self.dimmer[k]= light.light_control.lights[0].dimmer
                 change =True
         return change
 
@@ -197,29 +198,38 @@ class EquiptIKEA():
         N = len(self.IdIkea)
         for k in range(N):
             light = self.LightIkea[k]
-            light.device.update()
-            if DEBUG: print(light.device.id,light.device.name,light.device.reachable,
-                            light.state,light.dimmer,light.hex_color)
-            if light.device.reachable:
+            update_command=light.update()
+            self.api(update_command)
+            if DEBUG: print(light.id,light.name,light.reachable,
+                            light.light_control.lights[0].state,
+                            light.light_control.lights[0].dimmer,
+                            light.light_control.lights[0].hex_color)
+            if light.reachable:
                 print("Eqt[%d] %s reach:%s,%s state=%s,%s dim=%d,%d col=%s "
-                        %(light.device.id,light.device.name,light.device.reachable,self.reach[k],
-                          light.state,self.state[k],light.dimmer,self.dimmer[k],light.hex_color))
+                        %(light.id,light.name,light.reachable,self.reach[k],
+                          light.light_control.lights[0].state,self.state[k],
+                          light.light_control.lights[0].dimmer,self.dimmer[k],
+                          light.light_control.lights[0].hex_color))
             else :
                 print("Eqt[%d] %s reach:%s,%s state=%s,%s"
-                        %(light.device.id,light.device.name,light.device.reachable,self.reach[k],
-                          light.state,self.state[k]))
+                        %(light.id,light.name,light.reachable,self.reach[k],
+                          light.light_control.lights[0].state,self.state[k]))
         return
 
     def set_state(self,k,on=True):
         light=self.LightIkea[k]
-        light.device.light_control.set_state(on)
-        light.device.update()
+        state_command=light.light_control.set_state(on)
+        self.api(state_command)
+        update_command=light.uodate()
+        self.api(update_command)
         return
 
     def set_dimmer(self,k,dimmer=255):
         light=self.LightIkea[k]
-        light.device.light_control.set_dimmer(dimmer)
-        light.device.update()
+        dim_command = light.light_control.set_dimmer(dimmer)
+        self.api(dim_command)
+        update_command=light.update()
+        self.api(update_command)
         return
 
 #
@@ -297,7 +307,7 @@ while True :
     if DEBUG:
         eqIkea.info()
         eqJEEDOM.info()
-    delai=20
+    delai=13
     if DEBUG:
         print("sleep ",delai)
     time.sleep(delai)
