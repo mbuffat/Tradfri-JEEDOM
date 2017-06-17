@@ -3,7 +3,11 @@
 # Interface Jeedom avec le système TRADFRI IKEA pour la gestion des lumières
 
 ## mise a jour ##
+
+ - compatibilite tradfri.py  version 2.0(uniquemement)
+
  - utilisation d'un fichier de configuration tradfri.cfg a mettre dans /etc/tradfri.cfg ou dans le repertoire courant
+
  - gestion de la couleur des lampes dans **set_tradfri.py** option col
 
 set_tradfri.py col [warm/normal/cold]

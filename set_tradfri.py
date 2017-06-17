@@ -6,9 +6,13 @@
 # allume ou eteind des lumieres avec intensité
 
 import sys
-import pytradfri
 import time
 import configparser
+
+from pytradfri import Gateway
+from pytradfri.api.libcoap_api import api_factory
+
+DEBUG=True
 #
 # lecture configuration dans tradfri.cfg
 #
@@ -20,12 +24,18 @@ IP     = conf.get('IKEA','IP')
 KEY    = conf.get('IKEA','KEY')
 # couleurs en hexa
 COL={'warm':'efd275','normal':'f1e0b5','cold':'f5faf6'}
-# configuration variables. 
-api = pytradfri.coap_cli.api_factory(IP, KEY)
-gateway = pytradfri.gateway.Gateway(api)
+
+# configuration API IKEA
+api     = api_factory(IP, KEY)
+gateway = Gateway()
+
 # recuperation info
-devices = gateway.get_devices()
+devices_command  = gateway.get_devices()
+devices_commands = api(devices_command)
+devices = api(*devices_commands)
+if DEBUG: print("devices:",devices)
 lights = [dev for dev in devices if dev.has_light_control]
+if DEBUG: print("lights:",lights)
 #
 if (len(sys.argv) == 1):
     print("\nsyntaxe: set_tradfri [on/off/status/dim/col] [val/cold/normal/warm] ampoules_id\n")
@@ -66,12 +76,15 @@ for ampoule in ampoulesId :
    # ampoule associée
    # change etat
    if dim!= None :
+        if DEBUG: print("set dim ",dim)
         Light.device.light_control.set_dimmer(dim)
         Light.device.update()
    elif color != None:
+        if DEBUG: print("set color ",color)
         Light.device.light_control.set_hex_color(color)
         Light.device.update()
    elif state != None:
+        if DEBUG: print("set state ",state)
         Light.device.light_control.set_state(state)
         Light.device.update()
    else:

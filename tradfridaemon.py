@@ -3,10 +3,12 @@
 import sys
 import time
 import socket
-import pytradfri
 import json
 import requests,logging
 import configparser
+
+from pytradfri import Gateway
+from pytradfri.api.libcoap_api import api_factory
 
 #
 DEBUG=False
@@ -86,6 +88,7 @@ class EquiptJEEDOM():
         for k in range(N):
             # lecture etat
             reponse = JeedomAPI(self.EtatId[k],"cmd::execCmd")
+            if DEBUG: print(reponse)
             rep = reponse.json()['result']
             self.etat[k]=int(rep['value'])
             #reponse.close()
@@ -138,11 +141,16 @@ class EquiptIKEA():
         """ init eqt lampe IKEA """
         self.IdIkea=[int(l) for l in id_ikea]
         N = len(self.IdIkea)
-        # init pont
-        self.api = pytradfri.coap_cli.api_factory(IP, KEY)
-        self.gateway = pytradfri.gateway.Gateway(self.api)
+        # init pont IKEA
+        self.api     = api_factory(IP, KEY)
+        self.gateway = Gateway()
+
+        # recuperation info
+        devices_command  = self.gateway.get_devices()
+        devices_commands = self.api(devices_command)
+        self.devices     = self.api(*devices_commands)
+
         # liste des lumieres
-        self.devices = self.gateway.get_devices()
         lights = [dev for dev in self.devices if dev.has_light_control]
         # Print all lights
         if DEBUG:
@@ -256,7 +264,7 @@ else:
     while not internet(host=IP_JEEDOM, port=80):
       time.sleep(10)
     #
-    time.sleep(40)
+    time.sleep(10)
 #
 
 SESSION_JEEDOM = requests.Session()
@@ -278,8 +286,8 @@ eqJEEDOM.info()
 print("\tBoucle sur %d Equipt\n\t================\n"%N)
 sys.stdout.flush()
 while True :
-    #eqIkea=EquiptIKEA(IKEA_ID)
-    #N = len(eqIkea.LightIkea)
+    eqIkea=EquiptIKEA(IKEA_ID)
+    N = len(eqIkea.LightIkea)
     for k in range(N):
         if eqIkea.check_state(k):
             print("Changement etat equipement ",k)
