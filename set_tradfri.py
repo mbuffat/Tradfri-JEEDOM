@@ -12,7 +12,12 @@ import configparser
 from pytradfri import Gateway
 from pytradfri.api.libcoap_api import api_factory
 
-DEBUG=True
+DEBUG=False
+# parametres
+pos=1
+if sys.argv[pos] == "-d": 
+    DEBUG=True
+    pos += 1
 #
 # lecture configuration dans tradfri.cfg
 #
@@ -38,7 +43,7 @@ lights = [dev for dev in devices if dev.has_light_control]
 if DEBUG: print("lights:",lights)
 #
 if (len(sys.argv) == 1):
-    print("\nsyntaxe: set_tradfri [on/off/status/dim/col] [val/cold/normal/warm] ampoules_id\n")
+    print("\nsyntaxe: set_tradfri [-d] [on/off/status/dim/col] [val/cold/normal/warm] ampoules_id\n")
     print("\t\tPont TRADFRI ip:",IP)
     print("\n\tdevices %d"%len(devices))
     print(devices)
@@ -51,20 +56,21 @@ dim   = None
 state = None
 color = None
 ampoulesId = None
-if sys.argv[1] == "dim" :
-    dim = int(sys.argv[2])
-    ampoulesId = [int(sys.argv[k]) for k in range(3,len(sys.argv))]
-elif sys.argv[1] == "col":
-    color = COL[sys.argv[2]]
-    ampoulesId = [int(sys.argv[k]) for k in range(3,len(sys.argv))]
-elif sys.argv[1] == "on" :
+
+if sys.argv[pos] == "dim" :
+    dim = int(sys.argv[pos+1])
+    ampoulesId = [int(sys.argv[k]) for k in range(pos+2,len(sys.argv))]
+elif sys.argv[pos] == "col":
+    color = COL[sys.argv[pos+1]]
+    ampoulesId = [int(sys.argv[k]) for k in range(pos+2,len(sys.argv))]
+elif sys.argv[pos] == "on" :
     state= True
-    ampoulesId = [int(sys.argv[k]) for k in range(2,len(sys.argv))]
-elif sys.argv[1] == "off":
+    ampoulesId = [int(sys.argv[k]) for k in range(pos+1,len(sys.argv))]
+elif sys.argv[pos] == "off":
     state= False
-    ampoulesId = [int(sys.argv[k]) for k in range(2,len(sys.argv))]
+    ampoulesId = [int(sys.argv[k]) for k in range(pos+1,len(sys.argv))]
 else :
-    ampoulesId = [int(sys.argv[k]) for k in range(2,len(sys.argv))]
+    ampoulesId = [int(sys.argv[k]) for k in range(pos+1,len(sys.argv))]
 #
 for ampoule in ampoulesId :
    print("\tAmpoule %d"%(ampoule))
@@ -74,24 +80,33 @@ for ampoule in ampoulesId :
             Light = light.light_control.lights[0]
             break
    # ampoule associée
-   # change etat
-   if dim!= None :
-        if DEBUG: print("set dim ",dim)
-        Light.device.light_control.set_dimmer(dim)
-        Light.device.update()
-   elif color != None:
-        if DEBUG: print("set color ",color)
-        Light.device.light_control.set_hex_color(color)
-        Light.device.update()
-   elif state != None:
-        if DEBUG: print("set state ",state)
-        Light.device.light_control.set_state(state)
-        Light.device.update()
+   # change etat si branchee
+   if Light.device.reachable:
+        if dim!= None :
+            if DEBUG: print("set dim ",dim)
+            Light.device.light_control.set_dimmer(dim)
+            Light.device.update()
+        elif color != None:
+            if DEBUG: print("set color ",color)
+            Light.device.light_control.set_hex_color(color)
+            Light.device.update()
+        elif state != None:
+            if DEBUG: print("set state ",state)
+            Light.device.light_control.set_state(state)
+            Light.device.update()
+        else:
+            print("name    ",Light.device.name)
+            print("state   ",Light.state)
+            print("dimmmer ",Light.dimmer)
+            print("color   ",Light.hex_color)
+            print("reach   ",Light.device.reachable)
    else:
-        print("name    ",Light.device.name)
-        print("state   ",Light.state)
-        print("dimmmer ",Light.dimmer)
-        print("color   ",Light.hex_color)
-        print("reach   ",Light.device.reachable)
+        # cas non branche
+            print("Attention ampoule non branchée")
+            print("name    ",Light.device.name)
+            print("state   ",False)
+            print("dimmmer ",Light.dimmer)
+            print("color   ",Light.hex_color)
+            print("reach   ",Light.device.reachable)
 #
 sys.exit(0)
