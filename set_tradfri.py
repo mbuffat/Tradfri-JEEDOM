@@ -15,7 +15,7 @@ from pytradfri.api.libcoap_api import api_factory
 DEBUG=False
 # parametres
 pos=1
-if sys.argv[pos] == "-d": 
+if len(sys.argv)>1 and sys.argv[pos] == "-d": 
     DEBUG=True
     pos += 1
 #
